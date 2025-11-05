@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(findstr:*)"
-    ],
-    "deny": [],
-    "ask": []
-  }
-}
