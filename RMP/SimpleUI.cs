@@ -5,9 +5,12 @@ namespace RMP;
 
 public class SimpleUI
 {
+    private int songindex = 0;
     public void Run()
     {
-        while (true)
+        bool menu = true;
+
+        while (menu)
         {
             AnsiConsole.Clear();
             AnsiConsole.Write(
@@ -16,18 +19,6 @@ public class SimpleUI
             );
 
             AnsiConsole.MarkupLine("What would you like to do?");
-
-            //var choice = AnsiConsole.Prompt(
-            //    new SelectionPrompt<string>()
-            //        .AddChoices(
-            //            "Play",
-            //            "Search",
-            //            "Browse",
-            //            "Player Controls",
-            //            "Exit"
-            //        )
-            //        .PageSize(5)
-            //);
 
             var menuItems = new[] { "Play", "Search", "Browse", "Player Controls", "Exit" };
 
@@ -60,54 +51,48 @@ public class SimpleUI
                     break;
             }
 
-            if(choice == "Exit")
+            if (choice == "Exit")
             {
                 Console.Clear();
                 AnsiConsole.MarkupLine("Credits: ");
                 AnsiConsole.MarkupLine("Made by the Runtime Rebels Team");
+                menu = false;
                 Thread.Sleep(500);
-                break;
+
             }
         }
     }
 
     private void PlayMusic()
     {
-        AnsiConsole.Clear();
-
-
-        AnsiConsole.MarkupLine("[slowblink]Scanning directory...[/]");
-        Thread.Sleep(1000);
-        Console.Clear();
-
-        string musicFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-        string[] songs = Directory.GetFiles(musicFolder, "*.mp3");
-
-        Random rnd = new Random();
-        int songindex = rnd.Next(songs.Length);
-        string currentsong = songs[songindex];
-
-        WindowsMediaPlayer music = new WindowsMediaPlayer();
-        music.URL = currentsong;
-        music.controls.play();
-
-        if (Console.KeyAvailable)
+        bool keeyplaying = true;
+        
+        while (keeyplaying)
         {
-            var key = Console.ReadKey(true);
-            if (key.Key == ConsoleKey.RightArrow)
-            {
-                songindex = (songindex + 1) % songs.Length;
-                currentsong = songs[songindex];
-                music.URL = currentsong;
-                music.controls.play();
-            }
-        }
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[slowblink]Scanning directory...[/]");
+            Thread.Sleep(1000);
+            AnsiConsole.Clear();
 
-        string songName = Path.GetFileNameWithoutExtension(music.URL);
+            string musicFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            string[] songs = Directory.GetFiles(musicFolder, "*.mp3");
+
+            if (songs.Length == 0)
+            {
+                AnsiConsole.MarkupLine("[red]No MP3 files found in your Music folder.[/]");
+                Thread.Sleep(1500);
+                return;
+            }
+
+            string currentsong = songs[songindex];
+
+            WindowsMediaPlayer music = new WindowsMediaPlayer();
+            music.URL = currentsong;
+
+            string songName = Path.GetFileNameWithoutExtension(music.URL);
             string safeName = Markup.Escape(songName);
 
             AnsiConsole.MarkupLine($"[blue]Now playing:[/] [rapidblink]{safeName}[/]");
-
             AnsiConsole.MarkupLine("[blue]Press ESC to go back to menu[/]");
 
             Thread.Sleep(100);
@@ -117,71 +102,96 @@ public class SimpleUI
             {
                 Thread.Sleep(100);
                 waitCount++;
-            }
 
-            if (duration <= 0)
-            {
-                AnsiConsole.MarkupLine("[red]Could not get song duration. Displaying simulated progress...[/]");
-                duration = 100;
             }
+            if (duration <= 0) duration = 100;
+
+            bool stopSong = false;
 
             AnsiConsole.Progress()
+                .AutoRefresh(true)
                 .Columns(new ProgressColumn[]
                 {
-            new TaskDescriptionColumn(),
-            new ProgressBarColumn(),
-            new ElapsedTimeColumn(),
-            new SpinnerColumn()
+                new TaskDescriptionColumn(),
+                new ProgressBarColumn()
+                {
+                    CompletedStyle = new Style(Color.Blue)
+                },
+                new PercentageColumn(),
+                new SpinnerColumn()
+                {
+                    Style = new Style(Color.Blue)
+                }
                 })
-
                 .Start(ctx =>
                 {
                     music.controls.play();
                     var task = ctx.AddTask($"[bold]{safeName}[/]", maxValue: duration);
+                    AnsiConsole.WriteLine("Use <-- and --> arrow keys to change track");
 
-                    while (!ctx.IsFinished)
+                    while (!ctx.IsFinished && !stopSong)
                     {
-                        if (Console.KeyAvailable)
+                        double position = 0;
+                        try
                         {
-                            var key = Console.ReadKey(true);
-                            if (key.Key == ConsoleKey.Escape)
-                            {
-                                music.controls.stop();
-                                break;
-                            }
+                            position = music.controls.currentPosition;
+                        }
+                        catch
+                        {
+                            position = 0;
                         }
 
-                        //AnsiConsole.MarkupLine("Use the arrow keys (left and right) to change track");
+                        if (position < 0) position = 0;
+                        if (position > duration) position = duration;
 
-                        //var changeTrack = Console.ReadKey(true);
-
-                        //if (changeTrack.Key == ConsoleKey.RightArrow)
-                        //{
-                        //    music.controls.next();
-                        //}
-
-                        //if (changeTrack.Key == ConsoleKey.LeftArrow)
-                        //{
-                        //    music.controls.previous();
-                        //}
-
-                        double position = music.controls.currentPosition;
+                        task.Value = position;
 
                         if (position >= duration || music.playState == WMPPlayState.wmppsStopped)
                         {
-                            task.Value = duration;
-                            break;
+                            task.Value = duration; // fill progress bar to 100
+                            task.Increment(0.5);
+                            stopSong = true;
+                            Thread.Sleep(100);
+                            songindex = (songindex + 1) % songs.Length;
+
                         }
 
-                        task.Value = position;
-                        Thread.Sleep(200);
+                        if (Console.KeyAvailable)
+                        {
+                            switch (Console.ReadKey().Key)
+                            {
+                                case ConsoleKey.RightArrow:
+                                    task.Value = duration;
+                                    stopSong = true;
+                                    music.controls.stop();
+                                    Thread.Sleep(100);
+                                    songindex = (songindex + 1) % songs.Length;
+                                    break;
+
+                                case ConsoleKey.LeftArrow:
+                                    task.Value = duration;
+                                    stopSong = true;
+                                    music.controls.stop();
+                                    Thread.Sleep(100);
+                                    songindex = (songindex - 1) % songs.Length;
+                                    break;
+
+                                case ConsoleKey.Escape:
+                                    task.Value = duration;
+                                    stopSong = true;
+                                    music.controls.stop();
+                                    keeyplaying = false;
+                                    break;
+                            }
+                        }
                     }
+
                 });
 
-            Console.Clear();
-            Run();
+        }
     }
-    
+
+
 
     private void ShowSearch()
     {
@@ -224,5 +234,5 @@ public class SimpleUI
         }
     }
 
-    
+
 }
