@@ -1,9 +1,4 @@
 ﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WMPLib;
 
 namespace RMP
@@ -110,7 +105,7 @@ namespace RMP
                                 switch (Console.ReadKey().Key)
                                 {
                                     case ConsoleKey.RightArrow:
-                                        task.Value = duration;
+                                        task.StopTask();
                                         stopSong = true;
                                         music.controls.stop();
                                         Thread.Sleep(100);
@@ -118,7 +113,7 @@ namespace RMP
                                         break;
 
                                     case ConsoleKey.LeftArrow:
-                                        task.Value = duration;
+                                        task.StopTask();
                                         stopSong = true;
                                         music.controls.stop();
                                         Thread.Sleep(100);
@@ -126,7 +121,7 @@ namespace RMP
                                         break;
 
                                     case ConsoleKey.Escape:
-                                        task.Value = duration;
+                                        task.StopTask();
                                         stopSong = true;
                                         music.controls.stop();
                                         keeyplaying = false;

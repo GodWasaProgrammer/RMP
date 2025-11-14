@@ -10,6 +10,62 @@ public class SimpleUI
     {
         bool menu = true;
 
+        
+        AnsiConsole.Progress()
+            .Columns(new ProgressColumn[]
+    {
+        new TaskDescriptionColumn(),
+        new ProgressBarColumn
+        {
+            FinishedStyle = new Style(Color.Blue),
+            RemainingStyle = new Style(Color.White),
+            CompletedStyle = new Style(Color.Blue)
+        },
+        new SpinnerColumn
+        {
+            Style = new Style(Color.Blue)
+        }
+    })
+
+    .Start(ctx =>
+    {
+        // Define tasks
+        var task1 = ctx.AddTask("[blue]Loading Runtime Music Player[/]");
+
+        while (!ctx.IsFinished)
+        {
+            task1.Increment(1.5);
+            Thread.Sleep(100);
+        }
+    });
+
+        // Splash screen
+        Console.Clear();
+
+        AnsiConsole.MarkupLine("[blue]  _____             _   _                  __  __           _        _____  _                       [/]");
+        Thread.Sleep(200);
+
+        AnsiConsole.MarkupLine("[blue] |  __ \\           | | (_)                |  \\/  |         (_)      |  __ \\| |                     [/]");
+        Thread.Sleep(200);
+
+        AnsiConsole.MarkupLine("[deepskyblue1] | |__) |   _ _ __ | |_ _ _ __ ___   ___  | \\  / |_   _ ___ _  ___  | |__) | | __ _ _   _  ___ _ __ [/]");
+        Thread.Sleep(200);
+
+        AnsiConsole.MarkupLine("[deepskyblue1] |  _  / | | | '_ \\| __| | '_ ` _ \\ / _ \\ | |\\/| | | | / __| |/ __| |  ___/| |/ _` | | | |/ _ \\ '__|[/]");
+        Thread.Sleep(200);
+
+        AnsiConsole.MarkupLine("[deepskyblue1] | | \\ \\ |_| | | | | |_| | | | | | |  __/ | |  | | |_| \\__ \\ | (__  | |    | | (_| | |_| |  __/ |   [/]");
+        Thread.Sleep(200);
+
+        AnsiConsole.MarkupLine("[blue] |_|  \\_\\__,_|_| |_|\\__|_|_| |_| |_|\\___| |_|  |_|\\__,_|___/_|\\___| |_|    |_|\\__,_|\\__, |\\___|_|   [/]");
+        Thread.Sleep(600);
+
+        AnsiConsole.MarkupLine("[blue]                                                                                     __/ |          [/]");
+        Thread.Sleep(600);
+
+        AnsiConsole.MarkupLine("[blue]                                                                                    |___/           [/]");
+        Thread.Sleep(900);
+
         while (menu)
         {
             AnsiConsole.Clear();
@@ -63,10 +119,6 @@ public class SimpleUI
             }
         }
     }
-
-    
-
-
 
     private void ShowSearch()
     {

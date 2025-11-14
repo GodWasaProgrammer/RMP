@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.53.0" />
+    <PackageReference Include="Spectre.Console.ImageSharp" Version="0.53.0" />
   </ItemGroup>
 
 </Project>
