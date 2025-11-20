@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace RMP;
 
 internal class Program
