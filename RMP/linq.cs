@@ -77,6 +77,7 @@ namespace RMP
 
                                 AnsiConsole.MarkupLine($"[blue]Now playing:[/] [rapidblink]{safeName}[/]");
                                 AnsiConsole.MarkupLine($"[grey]{artist} — {album} ({yearReleased}) \n{songDuration}[/]");
+                                AnsiConsole.MarkupLine("[blue]Use ↑↓ to raise or lower volume[/]");
                                 AnsiConsole.MarkupLine("[blue]Press ESC to go back to menu[/]");
 
                                 // give the player a short moment to load metadata
@@ -139,6 +140,16 @@ namespace RMP
                                                         SafeCall(() => music.controls.stop());
                                                         keepplaying = false;
                                                         search = false;
+                                                        break;
+
+                                                    case ConsoleKey.UpArrow:
+                                                        music.settings.volume = Math.Min(100, music.settings.volume + 5);
+                                                        music.settings.volume = music.settings.volume;
+                                                        break;
+
+                                                    case ConsoleKey.DownArrow:
+                                                        music.settings.volume = Math.Max(0, music.settings.volume - 5);
+                                                        music.settings.volume = music.settings.volume;
                                                         break;
                                                 }
                                             }
