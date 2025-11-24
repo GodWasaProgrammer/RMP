@@ -125,6 +125,7 @@ namespace RMP
 
                             // Continue?
                             AnsiConsole.Markup("\nPress [blue]ENTER[/] to pick another song");
+                            AnsiConsole.Markup("\nUse [blue]↑↓[/] to change volume");
 
                             while (!ctx.IsFinished)
                             {
@@ -149,7 +150,17 @@ namespace RMP
                                         case ConsoleKey.Enter:
                                             player.controls.stop();
                                             break;
-                                        
+
+                                        case ConsoleKey.UpArrow:
+                                            player.settings.volume = Math.Min(100, player.settings.volume + 5);
+                                            player.settings.volume = player.settings.volume;
+                                            break;
+
+                                        case ConsoleKey.DownArrow:
+                                            player.settings.volume = Math.Max(0, player.settings.volume - 5);
+                                            player.settings.volume = player.settings.volume;
+                                            break;
+
                                     }
                                 }
                             }
