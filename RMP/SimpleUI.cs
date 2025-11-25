@@ -1,3 +1,4 @@
+using RMP.Services;
 using Spectre.Console;
 using System.Text;
 using WMPLib;
@@ -6,6 +7,9 @@ namespace RMP;
 
 public class SimpleUI
 {
+    public LogService LogService { get; set; }
+    public SimpleUI(LogService logService) { LogService = logService; }
+
     private int songindex = 0;
     public void Run()
     {

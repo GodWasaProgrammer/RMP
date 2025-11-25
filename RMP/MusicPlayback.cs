@@ -12,6 +12,8 @@ namespace RMP
     public class MusicPlayback
     {
         public int songindex = 0;
+        public LogService LogService { get; set; }
+        public MusicPlayback(LogService logService) { LogService = logService; }
 
         public void PlayMusic()
         {
@@ -153,7 +155,10 @@ namespace RMP
                         music.controls.stop();
                         Marshal.ReleaseComObject(music);
                     }
-                    catch { }
+                    catch(Exception e) 
+                    {
+                        LogService.LogError(e.Message);
+                    }
                 }
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
