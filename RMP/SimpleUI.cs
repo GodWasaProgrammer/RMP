@@ -104,7 +104,8 @@ public class SimpleUI
                     break;
 
                 case "Browse":
-                    ShowBrowse();
+                    FileBrowser fileBrowser = new FileBrowser();
+                    fileBrowser.ShowBrowse();
                     break;
 
                 case "Player Controls":
