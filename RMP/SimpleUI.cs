@@ -104,7 +104,8 @@ public class SimpleUI
                     break;
 
                 case "Browse":
-                    ShowBrowse();
+                    FileBrowser fileBrowser = new FileBrowser();
+                    fileBrowser.ShowBrowse();
                     break;
 
                 case "Player Controls":
@@ -124,22 +125,6 @@ public class SimpleUI
                 Thread.Sleep(500);
 
             }
-        }
-    }
-
-    private void ShowBrowse()
-    {
-        AnsiConsole.Clear();
-        var category = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Browse by:")
-                .AddChoices(new[] { "Artists", "Albums", "Genres", "Back" }));
-
-        if (category != "Back")
-        {
-            AnsiConsole.MarkupLine($"[yellow]Browsing {category}...[/]");
-            AnsiConsole.MarkupLine("[dim]Press any key to return...[/]");
-            Console.ReadKey();
         }
     }
 
