@@ -63,7 +63,15 @@ namespace RMP
                             Console.Clear();
                             music = new WindowsMediaPlayer();
                             music.URL = songToPlay;
-                            bool keepplaying = true;
+
+                            try
+                            {
+                                int vol = (int)Math.Clamp(Settings.Current.Volume * 100f, 0f, 100f);
+                                SafeCall(() => music.settings.volume = vol);
+                            }
+                            catch { /* ignore volume set errors */ }
+
+                        bool keepplaying = true;
 
                             while (keepplaying)
                             {
