@@ -90,6 +90,13 @@ namespace RMP
                     player = new WindowsMediaPlayer();
                     player.URL = selectedPath;
 
+                    try
+                    {
+                        int vol = (int)Math.Clamp(Settings.Current.Volume * 100f, 0f, 100f);
+                        SafeCall(() => player.settings.volume = vol);
+                    }
+                    catch { /* ignore volume set errors */ }
+
                     AnsiConsole.MarkupLine($"[blue]Now playing:[/] [rapidblink]{selectedEscaped}[/]");
                     AnsiConsole.MarkupLine($"[grey]Full path:[/] {Markup.Escape(selectedPath)}");
                     AnsiConsole.Markup("\nUse [blue]↑↓[/] to change volume");

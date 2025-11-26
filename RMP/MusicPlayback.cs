@@ -1,5 +1,4 @@
-﻿// MusicPlayback.cs
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -21,6 +20,13 @@ namespace RMP
             try
             {
                 music = new WindowsMediaPlayer();
+                try
+                {
+                    int vol = (int)Math.Clamp(Settings.Current.Volume * 100f, 0f, 100f);
+                    SafeCall(() => music.settings.volume = vol);
+                }
+                catch { /* ignore volume set errors */ }
+
                 bool keepPlaying = true;
 
                 while (keepPlaying)

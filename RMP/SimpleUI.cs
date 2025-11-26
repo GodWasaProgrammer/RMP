@@ -82,7 +82,7 @@ public class SimpleUI
 
             AnsiConsole.MarkupLine("What would you like to do?");
 
-            var menuItems = new[] { "Play", "Search", "Browse", "Player Controls", "Exit" };
+            var menuItems = new[] { "Play", "Search", "Browse", "Settings", "Exit" };
 
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -108,8 +108,9 @@ public class SimpleUI
                     fileBrowser.ShowBrowse();
                     break;
 
-                case "Player Controls":
-                    ShowPlayerControls();
+                case "Settings":
+                    Settings settings = new Settings();
+                    settings.Adjust();
                     break;
 
                 case "Exit":
@@ -127,22 +128,4 @@ public class SimpleUI
             }
         }
     }
-
-    private void ShowPlayerControls()
-    {
-        AnsiConsole.Clear();
-        var control = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Player Controls:")
-                .AddChoices(new[] { "Play", "Pause", "Next", "Previous", "Back" }));
-
-        if (control != "Back")
-        {
-            AnsiConsole.MarkupLine($"[green]{control} pressed[/]");
-            AnsiConsole.MarkupLine("[dim]Press any key to return...[/]");
-            Console.ReadKey();
-        }
-    }
-
-
 }
