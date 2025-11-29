@@ -16,6 +16,8 @@ namespace RMP
 
         public void PlayMusic()
         {
+            var theme = new ThemeChanger();
+
             WindowsMediaPlayer music = null;
             try
             {
@@ -52,17 +54,30 @@ namespace RMP
                     // set URL (COM)
                     music.URL = currentsong;
 
-                    var meta = MetadataReader.Read(currentsong);
-                    string safeName = Markup.Escape(meta.Title ?? Path.GetFileNameWithoutExtension(currentsong));
-                    string artist = Markup.Escape("Artist: " + meta.Artist ?? "Okänd artist");
-                    string album = Markup.Escape("\nAlbum: " + meta.Album ?? "Okänt album");
-                    string yearReleased = (meta.Year > 0) ? meta.Year.ToString() : "Unknown";
-                    string songDuration = Markup.Escape("Duration: " + meta.Duration ?? "Unknown");
-                   
+                    var primaryColorName = theme.GetPrimaryColorName();
 
-                    AnsiConsole.MarkupLine($"[blue]Now playing:[/] [rapidblink]{safeName}[/]");
-                    AnsiConsole.MarkupLine($"[grey]{artist} — {album} ({yearReleased}) \n{songDuration}[/]");
-                    AnsiConsole.MarkupLine("[blue]Press ESC to go back to menu[/]");
+                    var meta = MetadataReader.Read(currentsong);
+                    string titleText = meta.Title ?? Path.GetFileNameWithoutExtension(currentsong);
+                    string safeTitle = Markup.Escape(titleText);
+
+                    string artistText = meta.Artist ?? "Okänd artist";
+                    string safeArtist = Markup.Escape(artistText);
+
+                    string albumText = meta.Album ?? "Okänt album";
+                    string safeAlbum = Markup.Escape(albumText);
+
+                    string yearReleased = (meta.Year > 0) ? meta.Year.ToString() : "Unknown";
+                    string safeYear = Markup.Escape(yearReleased);
+
+                    string durationText = meta.Duration ?? "Unknown";
+                    string safeDuration = Markup.Escape(durationText);
+
+                    // Use markup tags for colors and embed escaped content inside
+                    AnsiConsole.MarkupLine($"[{primaryColorName}]Now playing:[/][rapidblink]{safeTitle}[/]");
+                    AnsiConsole.MarkupLine($"[{primaryColorName}]Artist:[/] {safeArtist}");
+                    AnsiConsole.MarkupLine($"[{primaryColorName}]Album:[/] {safeAlbum} ({safeYear})");
+                    AnsiConsole.MarkupLine($"[{primaryColorName}]Length:[/] {safeDuration}");
+                    AnsiConsole.MarkupLine($"[{primaryColorName}]Press ESC to go back to menu[/]");
 
                     // give the player a short moment to load metadata
                     int waitCount = 0;
@@ -86,16 +101,16 @@ namespace RMP
                             new TaskDescriptionColumn(),
                             new ProgressBarColumn
                             {
-                                CompletedStyle = new Style(Color.Blue)
+                                CompletedStyle = new Style(theme.GetPrimaryColor())
                             },
                             new PercentageColumn(),
-                            new SpinnerColumn(Spinner.Known.Dots2) { Style = new Style(Color.Blue) }
+                            new SpinnerColumn(Spinner.Known.Dots2) { Style = new Style(theme.GetPrimaryColor()) }
                         })
                         .Start(ctx =>
                         {
                             music.controls.play();
-                            _logService.LogInfo($"{safeName}");
-                            var task = ctx.AddTask($"[bold]{safeName}[/]", maxValue: duration);
+                            _logService.LogInfo($"{safeTitle}");
+                            var task = ctx.AddTask($"[bold]{safeTitle}[/]", maxValue: duration);
                             AnsiConsole.WriteLine("Use <-- and --> arrow keys to change track");
 
                             while (!ctx.IsFinished && !stopSong)

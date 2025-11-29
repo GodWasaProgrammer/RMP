@@ -117,7 +117,8 @@ namespace RMP
 
         private void ChangeTheme()
         {
-            // here you can change the color of the text and more
+            ThemeChanger themeChanger = new ThemeChanger();
+            themeChanger.ChangeTheme();
         }
     }
 }

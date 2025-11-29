@@ -16,6 +16,8 @@ public class SimpleUI
         Console.OutputEncoding = Encoding.UTF8; // for SpectreConsole spinners support
         bool menu = true;
 
+        var theme = new ThemeChanger();
+        var primaryColorName = theme.GetPrimaryColorName();
         
         AnsiConsole.Progress()
             .Columns(new ProgressColumn[]
@@ -23,20 +25,20 @@ public class SimpleUI
         new TaskDescriptionColumn(),
         new ProgressBarColumn
         {
-            FinishedStyle = new Style(Color.Blue),
+            FinishedStyle = new Style(theme.GetPrimaryColor()),
             RemainingStyle = new Style(Color.White),
-            CompletedStyle = new Style(Color.Blue)
+            CompletedStyle = new Style(theme.GetPrimaryColor())
         },
         new SpinnerColumn
         {
-            Style = new Style(Color.Blue)
+            Style = new Style(theme.GetPrimaryColor())
         }
     })
 
     .Start(ctx =>
     {
         // Define tasks
-        var task1 = ctx.AddTask("[blue]Loading Runtime Music Player[/]");
+        var task1 = ctx.AddTask($"[{primaryColorName}]Loading Runtime Music Player[/]");
 
         while (!ctx.IsFinished)
         {
@@ -48,28 +50,28 @@ public class SimpleUI
         // Splash screen
         Console.Clear();
 
-        AnsiConsole.MarkupLine("[blue]  _____             _   _                  __  __           _        _____  _                       [/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}]  _____             _   _                  __  __           _        _____  _                       [/]");
         Thread.Sleep(200);
 
-        AnsiConsole.MarkupLine("[blue] |  __ \\           | | (_)                |  \\/  |         (_)      |  __ \\| |                     [/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}] |  __ \\           | | (_)                |  \\/  |         (_)      |  __ \\| |                     [/]");
         Thread.Sleep(200);
 
-        AnsiConsole.MarkupLine("[deepskyblue1] | |__) |   _ _ __ | |_ _ _ __ ___   ___  | \\  / |_   _ ___ _  ___  | |__) | | __ _ _   _  ___ _ __ [/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}] | |__) |   _ _ __ | |_ _ _ __ ___   ___  | \\  / |_   _ ___ _  ___  | |__) | | __ _ _   _  ___ _ __ [/]");
         Thread.Sleep(200);
 
-        AnsiConsole.MarkupLine("[deepskyblue1] |  _  / | | | '_ \\| __| | '_ ` _ \\ / _ \\ | |\\/| | | | / __| |/ __| |  ___/| |/ _` | | | |/ _ \\ '__|[/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}] |  _  / | | | '_ \\| __| | '_ ` _ \\ / _ \\ | |\\/| | | | / __| |/ __| |  ___/| |/ _` | | | |/ _ \\ '__|[/]");
         Thread.Sleep(200);
 
-        AnsiConsole.MarkupLine("[deepskyblue1] | | \\ \\ |_| | | | | |_| | | | | | |  __/ | |  | | |_| \\__ \\ | (__  | |    | | (_| | |_| |  __/ |   [/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}] | | \\ \\ |_| | | | | |_| | | | | | |  __/ | |  | | |_| \\__ \\ | (__  | |    | | (_| | |_| |  __/ |   [/]");
         Thread.Sleep(200);
 
-        AnsiConsole.MarkupLine("[blue] |_|  \\_\\__,_|_| |_|\\__|_|_| |_| |_|\\___| |_|  |_|\\__,_|___/_|\\___| |_|    |_|\\__,_|\\__, |\\___|_|   [/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}] |_|  \\_\\__,_|_| |_|\\__|_|_| |_| |_|\\___| |_|  |_|\\__,_|___/_|\\___| |_|    |_|\\__,_|\\__, |\\___|_|   [/]");
         Thread.Sleep(600);
 
-        AnsiConsole.MarkupLine("[blue]                                                                                     __/ |          [/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}]                                                                                     __/ |          [/]");
         Thread.Sleep(600);
 
-        AnsiConsole.MarkupLine("[blue]                                                                                    |___/           [/]");
+        AnsiConsole.MarkupLine($"[{primaryColorName}]                                                                                    |___/           [/]");
         Thread.Sleep(900);
 
         while (menu)
@@ -77,7 +79,7 @@ public class SimpleUI
             AnsiConsole.Clear();
             AnsiConsole.Write(
                 new FigletText("RMP")
-                .Color(Color.Blue)
+                .Color(Color)
             );
 
             AnsiConsole.MarkupLine("What would you like to do?");
