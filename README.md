@@ -1,6 +1,6 @@
 # 🎵 RMP
 
-**RMP** is a lightweight music player made with C#. RMP's features are as follows: managing music metadata, playing music, and browsing/searching songs with LINQ.  
+**Runtime Music Player** is a lightweight music player made with C#. RMP's features are as follows: managing music metadata, playing music, and browsing/searching songs with LINQ.  
 It features a console-based UI, logging, state management, and theme support. Modular and easy to extend, RMP works well for small music apps or as a framework for larger projects.
 
 ---
@@ -74,7 +74,14 @@ Interface for logging **info, warnings, and errors** throughout the app.
 > 💡 **Interface = Contract**  
 > An interface defines a **contract** that any implementing class must fulfill.  
 > - Specifies **what methods, properties, events, or indexers** a class must implement  
+
+
 > - Does **not provide implementation**  
 > - Think of it as a **promise**: the class guarantees the behavior defined by the interface.
 
 ---
+
+### 🚀 How to run
+Download as a ZIP file, clone with git or open with Visual Studio. Minimum supported .NET version is 8.0, so if you have an older version then you might need to update. Once you have followed these steps, open in VS 2022 or later and click on debug. Once the program has compiled for the first time, you can run it without having VS installed by running the .exe file in the \bin folder. 
+
+To play songs 🎵 inside the console, drag and drop your .mp3 files to your local Music folder on your computer. 
